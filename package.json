@@ -1,0 +1,23 @@
+{
+  "name": "proj9_todolist",
+  "version": "1.0.0",
+  "description": "This is supposed to be a tosolist",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ANUSHKALA/Proj9_Todolist.git"
+  },
+  "author": "anushka",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ANUSHKALA/Proj9_Todolist/issues"
+  },
+  "homepage": "https://github.com/ANUSHKALA/Proj9_Todolist#readme",
+  "dependencies": {
+    "body-parser": "^1.19.2",
+    "express": "^4.17.3"
+  }
+}
