@@ -1,33 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>todolist</title>
-    <link rel="stylesheet" href="../CSS/styles.css">
-</head>
-<body>
+<%- include("header") -%> 
 
  <div class="box" id="heading">
-    <h1><%= nameOfDay %> </h1>
+    <h1><%= listName %> </h1>
  </div>
 
  <div class="box">
-    <% for(var i = 0;i<listOfTasks.length;i++){ %>
+    <% for(var i = 0;i<taskList.length;i++){ %>
         <div class="newTask">
             <input type="checkbox" name="" id="">
-            <p><%= listOfTasks[i] %> </p>
+            <p><%= taskList[i] %> </p>
         </div>
     <% } %>
 
-    <form class="newTask" action="/" method="post">
+    <form class="newTask" action= <%= listName %>  method="post">
         <input type="text" name="newItem" placeholder="New Task" autocomplete="off">
-        <button type="submit" >+</button>
+        <button type="submit" name = "button" value = <%= listName %>  >+</button>
     </form>
  </div>
-
-
    
-</body>
-</html>
+<%- include('footer') -%> 

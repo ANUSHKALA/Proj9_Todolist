@@ -7,15 +7,19 @@ app.use(bodyParser.urlencoded());
 app.use(bodyParser.json());
 app.use(express.static("public"));
 
-var tasks = [];
+var defaultList = [];
+var workList = [];
 
 app.set("view engine", "ejs");
 
-app.get("/", function (req,res){
+
+
+
+app.get("/default", function (req,res){
 
     var today = new Date();
-    var dayName = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-    var daynum = today.getDay();
+    // var dayName = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    // var daynum = today.getDay();
 
 
     var options = {
@@ -27,16 +31,35 @@ app.get("/", function (req,res){
     var day = today.toLocaleDateString('en-US', options);
 
     res.render("list", {
-        nameOfDay: day,
-        listOfTasks : tasks,
+        listName: "Default",
+        taskList : defaultList,
     });
 });
 
-app.post("/",function (req,res){
+app.post("/default",function (req,res){
+
+    // const rout = "/"+;
+
+
     var newTask = req.body.newItem;
-    tasks.push(newTask);
-    res.redirect("/");
+    defaultList.push(newTask);
+    res.redirect("/default");
 });
+
+
+
+app.get("/work",function (req,res){
+    res.render('list',{
+        listName:'Work',
+        taskList: workList,
+    })
+})
+
+app.post("/work", function (req,res){
+    var newTask = req.body.newItem;
+    workList.push(newTask);
+    res.redirect("/work");
+})
 
 
 app.listen(3000, function (){
