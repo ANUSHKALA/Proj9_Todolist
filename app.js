@@ -5,6 +5,7 @@ const app = express();
 
 app.use(bodyParser.urlencoded());
 app.use(bodyParser.json());
+app.use(express.static("public"));
 
 var tasks = [];
 
@@ -24,9 +25,6 @@ app.get("/", function (req,res){
     }
 
     var day = today.toLocaleDateString('en-US', options);
-
-
-    console.log(dayName[daynum])
 
     res.render("list", {
         nameOfDay: day,
