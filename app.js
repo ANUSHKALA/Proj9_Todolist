@@ -1,5 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const date = require(__dirname + '/date.js');
+
+console.log(date.getDate());
 
 const app = express();
 
@@ -9,6 +12,8 @@ app.use(express.static("public"));
 
 var defaultList = [];
 var workList = [];
+
+
 
 app.set("view engine", "ejs");
 
@@ -21,14 +26,6 @@ app.get("/default", function (req,res){
     // var dayName = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
     // var daynum = today.getDay();
 
-
-    var options = {
-        weekday: 'long',
-        day: 'numeric',
-        month: 'long',
-    }
-
-    var day = today.toLocaleDateString('en-US', options);
 
     res.render("list", {
         listName: "Default",
