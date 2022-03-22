@@ -39,15 +39,6 @@ const play = new Item({
 })
 
 
-// Item.insertMany([study,shop,play],function (err){
-//     if(err){
-//         console.log(err)
-//     }
-//     else{
-//         console.log("Successfully add items to todolist")
-//     }
-// })
-
 
 
 app.set("view engine", "ejs");
@@ -60,6 +51,17 @@ app.get("/category", function (req,res){
             console.log(err);
         }
         else{
+
+            if(results.length === 0){
+                Item.insertMany([study,shop,play],function (err){
+                    if(err){
+                        console.log(err)
+                    }
+                    else{
+                        console.log("Successfully add items to todolist")
+                    }
+                })            
+            }
             res.render("list", {
                 listName: "Category",
                 taskList : results,
@@ -75,10 +77,29 @@ app.post("/category",function (req,res){
     // const rout = "/"+;
 
 
-    var newTask = req.body.newItem;
-    CategoryList.push(newTask);
+    var itemName = req.body.newItem;
+
+    const item = new Item({
+        name: itemName,
+    })
+    item.save();
     res.redirect("/category");
 });
+
+app.post("/delete",function (req,res){
+    const doneTaskId = (req.body.doneBox);
+
+    Item.findByIdAndRemove(doneTaskId,function (err){
+        if(err){
+            console.log(err);
+        }
+        else{
+            console.log("Item deleted successfully!")
+        }
+    })
+    res.redirect("/category");
+
+})
 
 
 
