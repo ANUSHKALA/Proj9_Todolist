@@ -5,12 +5,12 @@
  </div>
 
  <div class="box">
-    <% for(var i = 0;i<taskList.length;i++){ %>
+    <% taskList.forEach(task => { %>
         <div class="newTask">
             <input type="checkbox" name="" id="">
-            <p><%= taskList[i] %> </p>
+            <p><%= task.name %> </p>
         </div>
-    <% } %>
+    <% }) %>
 
     <form class="newTask" action= <%= listName %>  method="post">
         <input type="text" name="newItem" placeholder="New Task" autocomplete="off">

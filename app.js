@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const date = require(__dirname + '/date.js');
+const mongoose = require("mongoose");
 
 console.log(date.getDate());
 
@@ -10,37 +11,73 @@ app.use(bodyParser.urlencoded());
 app.use(bodyParser.json());
 app.use(express.static("public"));
 
-var defaultList = [];
-var workList = [];
+
+mongoose.connect("mongodb://localhost:27017/todolistDB");
+
+const todolistSchema = {
+    name:{
+        type: String,
+    },
+    // status:{
+    //     type: Boolean
+    // },
+    // category: "String"
+}
+
+const Item = mongoose.model("Item",todolistSchema);
+
+const study = new Item({
+    name: "Study hard"
+})
+
+const shop = new Item({
+    name: "Go Shopping"
+})
+
+const play = new Item({
+    name: "Play"
+})
+
+
+// Item.insertMany([study,shop,play],function (err){
+//     if(err){
+//         console.log(err)
+//     }
+//     else{
+//         console.log("Successfully add items to todolist")
+//     }
+// })
 
 
 
 app.set("view engine", "ejs");
 
 
+app.get("/category", function (req,res){
+
+    Item.find({},function (err,results){
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.render("list", {
+                listName: "Category",
+                taskList : results,
+            });
+        }
+    })
 
 
-app.get("/default", function (req,res){
-
-    var today = new Date();
-    // var dayName = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-    // var daynum = today.getDay();
-
-
-    res.render("list", {
-        listName: "Default",
-        taskList : defaultList,
-    });
 });
 
-app.post("/default",function (req,res){
+app.post("/category",function (req,res){
 
     // const rout = "/"+;
 
 
     var newTask = req.body.newItem;
-    defaultList.push(newTask);
-    res.redirect("/default");
+    CategoryList.push(newTask);
+    res.redirect("/category");
 });
 
 
