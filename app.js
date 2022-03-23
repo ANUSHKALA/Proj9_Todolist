@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const date = require(__dirname + '/date.js');
 const mongoose = require("mongoose");
+const _ = require("lodash");
 
 console.log(date.getDate());
 
@@ -12,30 +13,27 @@ app.use(bodyParser.json());
 app.use(express.static("public"));
 
 
-mongoose.connect("mongodb://localhost:27017/todolistDB");
+mongoose.connect("mongodb+srv://admin-anushka:mongodb%404055@cluster0.cvdjs.mongodb.net/todolistDB");
 
 const todolistSchema = {
     name:{
         type: String,
     },
-    // status:{
-    //     type: Boolean
-    // },
-    // category: "String"
+
 }
 
 const Item = mongoose.model("Item",todolistSchema);
 
 const study = new Item({
-    name: "Study hard"
+    name: "This is a todolist."
 })
 
 const shop = new Item({
-    name: "Go Shopping"
+    name: "Hit + to add the task."
 })
 
 const play = new Item({
-    name: "Play"
+    name: "<-- checkout the box to delete a task."
 })
 
 const defaultList = [study,shop,play];
@@ -92,7 +90,7 @@ app.post("/today",function (req,res){
             }
             foundList.items.push(item);
             foundList.save();
-            res.redirect("/category/"+title);
+            res.redirect("/"+title);
         })
     }
 
@@ -125,7 +123,7 @@ app.post("/delete",function (req,res){
                 console.log(err);
             }
             else{
-                res.redirect("/category/"+title)
+                res.redirect("/"+title)
                 console.log("Item deleted successfully from custom list!")
             }
         });
@@ -149,8 +147,8 @@ const listSchema = {
 const List = mongoose.model("List",listSchema)
 
 
-app.get("/category/:category",function (req,res){
-    const cat = req.params.category;
+app.get("/:category",function (req,res){
+    const cat = _.capitalize(req.params.category);
 
 
 
