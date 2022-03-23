@@ -38,13 +38,13 @@ const play = new Item({
     name: "Play"
 })
 
-
+const defaultList = [study,shop,play];
 
 
 app.set("view engine", "ejs");
 
 
-app.get("/category", function (req,res){
+app.get("/today", function (req,res){
 
     Item.find({},function (err,results){
         if(err){
@@ -53,7 +53,7 @@ app.get("/category", function (req,res){
         else{
 
             if(results.length === 0){
-                Item.insertMany([study,shop,play],function (err){
+                Item.insertMany(defaultList,function (err){
                     if(err){
                         console.log(err)
                     }
@@ -63,58 +63,122 @@ app.get("/category", function (req,res){
                 })            
             }
             res.render("list", {
-                listName: "Category",
+                listName: "Today",
                 taskList : results,
             });
         }
     })
-
-
 });
 
-app.post("/category",function (req,res){
-
-    // const rout = "/"+;
+app.post("/today",function (req,res){
 
 
-    var itemName = req.body.newItem;
+    const itemName = req.body.newItem;
+    const title = req.body.add;
 
     const item = new Item({
         name: itemName,
     })
-    item.save();
-    res.redirect("/category");
+
+    if(title === "Today"){
+        item.save();
+        console.log(title)
+        res.redirect("/today");
+    }
+    else{
+        List.findOne({name: title}, function (err,foundList){
+            if(err){
+                console.log(err);
+            }
+            foundList.items.push(item);
+            foundList.save();
+            res.redirect("/category/"+title);
+        })
+    }
+
 });
 
 app.post("/delete",function (req,res){
     const doneTaskId = (req.body.doneBox);
+    const title = req.body.add;
 
-    Item.findByIdAndRemove(doneTaskId,function (err){
+    if(title === "Today"){
+        Item.findByIdAndRemove(doneTaskId,function (err){
+            if(err){
+                console.log(err);
+            }
+            else{
+                console.log("Item deleted successfully!")
+            }
+        })
+        res.redirect("/today");
+    }
+    else{
+        List.findOneAndUpdate({
+            name: title
+        },
+        {
+            $pull: {items: {_id: doneTaskId}}
+        },
+        function (err){
+            if(err){
+                console.log(err);
+            }
+            else{
+                res.redirect("/category/"+title)
+                console.log("Item deleted successfully from custom list!")
+            }
+        });
+    }
+})
+
+
+
+// app.get("/:category",function (req,res){
+//     const cat = req.params.category;
+
+//     res.render("category")
+// })
+
+
+const listSchema = {
+    name : String,
+    items : [todolistSchema]
+}
+
+const List = mongoose.model("List",listSchema)
+
+
+app.get("/category/:category",function (req,res){
+    const cat = req.params.category;
+
+
+
+    List.findOne({name:cat}, function (err, foundList){
         if(err){
-            console.log(err);
+            console.log(err)
         }
         else{
-            console.log("Item deleted successfully!")
+            if(!foundList){
+                const list = new List({
+                    name: cat,
+                    items: defaultList,
+                })
+                list.save();
+                res.redirect("/"+cat)
+            }
+            else{
+                res.render("list", {
+                    listName: foundList.name,
+                    taskList : foundList.items,
+                });            
+            }
         }
     })
-    res.redirect("/category");
-
-})
+});
 
 
 
-app.get("/work",function (req,res){
-    res.render('list',{
-        listName:'Work',
-        taskList: workList,
-    })
-})
-
-app.post("/work", function (req,res){
-    var newTask = req.body.newItem;
-    workList.push(newTask);
-    res.redirect("/work");
-})
 
 
 app.listen(3000, function (){
