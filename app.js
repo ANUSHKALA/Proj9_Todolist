@@ -177,8 +177,11 @@ app.get("/:category",function (req,res){
 
 
 
-
-
-app.listen(process.env.port , function (){
-    console.log('This server is ready to ROCK!!!.')
-})
+let port = process.env.PORT;
+if (port == null || port == "") {
+  port = 3000;
+}
+ 
+app.listen(port, function() {
+  console.log('This server is ready to ROCK!!!.');
+});   
