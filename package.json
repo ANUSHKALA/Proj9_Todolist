@@ -12,6 +12,9 @@
   },
   "author": "anushka",
   "license": "ISC",
+  "engines": {
+    "node": "16.13.2"
+  },
   "bugs": {
     "url": "https://github.com/ANUSHKALA/Proj9_Todolist/issues"
   },
